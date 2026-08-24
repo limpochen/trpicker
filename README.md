@@ -2,7 +2,7 @@
 
 **English** | [简体中文](docs/README_cn.md)
 
-**Version: 1.1.1**
+**Version: 1.1.2**
 
 An SVG-based circular time-range picker supporting **24-hour** / **12-hour** modes. Select a time range by dragging the handles.
 
@@ -89,6 +89,10 @@ const picker = new trPicker(document.getElementById('trigger'), {
 </script>
 ```
 
+The popup panel is positioned directly below the trigger input by default, with a `4px` gap. If the viewport does not leave enough space below, it automatically flips to appear above the input.
+
+> `popupOffset` (default `4`) is a global appearance constant, not a constructor option. Adjust it before creating the picker: `trPicker.APPEARANCE.popup.offset = 8;`
+
 ---
 
 ## Configuration options
@@ -162,10 +166,6 @@ CSS class names are prefixed with `trpicker-`; override them to customize the ap
 | `.trigger-input` | Trigger input (defined by the consumer) |
 
 The component does not touch the consumer's display styles. Format and update the UI yourself in the `onChange` callback.
-| `.trpicker-fine-slider` | Fine slider container |
-| `.trpicker-fine-track` | Slider track |
-| `.trpicker-fine-thumb` | Slider thumb |
-| `.trpicker-fine-label` | Slider time label |
 
 ---
 

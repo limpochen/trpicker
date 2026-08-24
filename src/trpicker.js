@@ -1,7 +1,7 @@
 /**
  * trPicker — Circular Time Range Picker (Entry)
  * =============================================
- * @version 1.1.1
+ * @version 1.1.2
  *
  * Class skeleton + constructor + public API.
  *
@@ -552,7 +552,7 @@ trPicker.registerMode = function(mode, cls) {
 };
 
 /** Current version */
-trPicker.VERSION = '1.1.1';
+trPicker.VERSION = '1.1.2';
 
 // ==================== Self-contained style injection (no external CSS file needed) ====================
 // Injects the component styles into <head> on first load (deduplicated by id), ready before instantiation.

@@ -1,6 +1,6 @@
 # trPicker — 圆形时间范围选择器
 
-**版本：1.1.1**
+**版本：1.1.2**
 
 一个基于 SVG 的圆形时间范围选择器，支持 **24 小时制** / **12 小时制**。通过拖拽手柄即可选择时间范围。
 
@@ -87,6 +87,10 @@ const picker = new trPicker(document.getElementById('trigger'), {
 </script>
 ```
 
+弹出面板默认显示在触发输入框的正下方，间距 `4px`；若视口下方空间不足，会自动翻转到输入框上方显示。
+
+> `popupOffset`（默认 `4`）是全局外观常量，而非构造器配置项。可在创建选择器前通过 `trPicker.APPEARANCE.popup.offset = 8;` 调整。
+
 ---
 
 ## 配置项
@@ -160,10 +164,6 @@ CSS 类名均以 `trpicker-` 为前缀；可通过覆盖这些类来自定义外
 | `.trigger-input` | 触发输入框（由使用者定义） |
 
 组件不会干预使用者的显示样式。请在 `onChange` 回调中自行格式化并更新界面。
-| `.trpicker-fine-slider` | 微调滑条容器 |
-| `.trpicker-fine-track` | 滑条轨道 |
-| `.trpicker-fine-thumb` | 滑条滑块 |
-| `.trpicker-fine-label` | 滑条时间标签 |
 
 ---
 

@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.2] - 2026-08-24
+
+### Changed
+
+- Document the popup panel positioning behavior: it appears below the trigger by default and flips above when the viewport below is too small.
+- Document that `popupOffset` is a global appearance constant (`trPicker.APPEARANCE.popup.offset`), not a constructor option.
+
+### Fixed
+
+- Repair the broken Styling table in the README (an inline paragraph interrupted the table and the `.trpicker-fine-slider` row was duplicated).
+- Remove the non-existent `.trpicker-fine-track` / `.trpicker-fine-thumb` / `.trpicker-fine-label` classes from the styling table; these never existed in the source.
+
+### Maintenance
+
+- Bumped the version from 1.1.1 to 1.1.2.
+
 ## [1.1.1] - 2026-08-24
 
 ### Changed
