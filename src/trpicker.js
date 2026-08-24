@@ -1,7 +1,7 @@
 /**
  * trPicker — Circular Time Range Picker (Entry)
  * =============================================
- * @version 1.1.0
+ * @version 1.1.1
  *
  * Class skeleton + constructor + public API.
  *
@@ -57,7 +57,7 @@ export default class trPicker {
             const Ctor = trPicker._modeRegistry[mode];
             if (!Ctor) {
                 throw new Error(
-                    `trPicker: hourCycle "${hourCycle}" is not registered. Make sure the corresponding script file is loaded.`
+                    `trPicker: hourCycle "${hourCycle}" is not registered. Import the package entry (e.g. 'trpicker') so the 12h/24h mode classes are registered.`
                 );
             }
             return new Ctor(container, options);
@@ -247,7 +247,7 @@ export default class trPicker {
         this.stepMinute = minute;
         this.startMinute = Math.floor(this.startMinute / minute) * minute;
         this.endMinute   = Math.floor(this.endMinute   / minute) * minute;
-        const cwDist = (this.endMinute - this.startMinute + 1440) % 1440;
+        const cwDist = trPicker._cwDist(this.startMinute, this.endMinute);
         // enableMinStep applies to both 24H and 12H modes
         if (this.enableMinStep && cwDist < this.stepMinute) {
             this.endMinute = (this.startMinute + this.stepMinute) % 1440;
@@ -297,20 +297,20 @@ export default class trPicker {
     _validateMove(handle, newVal) {
         if (this.hourCycle === 12) {
             // 12H: delegate to the existing method
-            const oldDist = (this.endMinute - this.startMinute + 1440) % 1440;
+            const oldDist = trPicker._cwDist(this.startMinute, this.endMinute);
             const newDist = handle === 'start'
-                ? (this.endMinute - newVal + 1440) % 1440
-                : (newVal - this.startMinute + 1440) % 1440;
+                ? trPicker._cwDist(newVal, this.endMinute)
+                : trPicker._cwDist(this.startMinute, newVal);
             return this._validate12hStep(newDist, oldDist, this.stepMinute);
         }
         // 24H mode — unified symmetric logic for start/end
         const step = this.stepMinute;
-        const oldDist = (this.endMinute - this.startMinute + 1440) % 1440;
+        const oldDist = trPicker._cwDist(this.startMinute, this.endMinute);
         const handleCur = handle === 'start' ? this.startMinute : this.endMinute;
-        const movedCw = (newVal - handleCur + 1440) % 1440;
+        const movedCw = trPicker._cwDist(handleCur, newVal);
         const newDist = handle === 'start'
-            ? (this.endMinute - newVal + 1440) % 1440
-            : (newVal - this.startMinute + 1440) % 1440;
+            ? trPicker._cwDist(newVal, this.endMinute)
+            : trPicker._cwDist(this.startMinute, newVal);
 
         // Start CW or End CCW → moving toward the other handle (distance shrinks)
         const movingToward = (handle === 'start' && movedCw <= 720) || (handle === 'end' && movedCw > 720);
@@ -342,14 +342,7 @@ export default class trPicker {
      * @returns {{ startDay: Date, endDay: Date, durationMin: number }}
      */
     getDateTimeValues(baseDate) {
-        let refDate;
-        if (!baseDate) {
-            refDate = new Date();
-        } else if (typeof baseDate === 'string') {
-            refDate = new Date(baseDate);
-        } else {
-            refDate = new Date(baseDate);
-        }
+        let refDate = baseDate ? new Date(baseDate) : new Date();
         if (isNaN(refDate.getTime())) {
             refDate = new Date();
         }
@@ -559,10 +552,10 @@ trPicker.registerMode = function(mode, cls) {
 };
 
 /** Current version */
-trPicker.VERSION = '1.1.0';
+trPicker.VERSION = '1.1.1';
 
-// ==================== 自包含样式注入（组件不再依赖外部 CSS 文件） ====================
-// 首次加载时把组件样式注入 <head>（以 id 防重复），确保实例化前样式就绪。
+// ==================== Self-contained style injection (no external CSS file needed) ====================
+// Injects the component styles into <head> on first load (deduplicated by id), ready before instantiation.
 
 (function() {
     'use strict';

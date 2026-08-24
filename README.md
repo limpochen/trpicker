@@ -2,7 +2,7 @@
 
 **English** | [简体中文](docs/README_cn.md)
 
-**Version: 1.1.0**
+**Version: 1.1.1**
 
 An SVG-based circular time-range picker supporting **24-hour** / **12-hour** modes. Select a time range by dragging the handles.
 

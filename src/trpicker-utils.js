@@ -55,6 +55,11 @@ const P = trPicker.prototype;
         return d;
     };
 
+    /** Clockwise minute distance from `from` to `to` (0-1439, handles the midnight wraparound) */
+    trPicker._cwDist = function(from, to) {
+        return (to - from + 1440) % 1440;
+    };
+
     // ==================== 12H step validation (shared by three call sites) ====================
 
     /**

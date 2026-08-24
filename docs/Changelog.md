@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.1] - 2026-08-24
+
+### Changed
+
+- Extract a `_cwDist` helper for clockwise minute-distance math, replacing eight duplicated `(a - b + 1440) % 1440` expressions in `trpicker.js`.
+- Simplify redundant date parsing in `getDateTimeValues` and update the factory-dispatch error message for the ESM entry.
+- Translate the last remaining Chinese comments in `src/` to English.
+
+### Fixed
+
+- GitHub Actions publish workflow lacked the `contents: write` permission, so GitHub Release creation failed on the v1.1.0 tag.
+- `1.1.0` could not be re-published (npm permanently reserves published version numbers), so the release now ships as `1.1.1`; the ES module refactor first becomes publicly available here.
+
+### Maintenance
+
+- Bumped the version from 1.1.0 to 1.1.1.
+
 ## [1.1.0] - 2026-08-24
 
 ### Added
