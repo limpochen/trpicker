@@ -1,11 +1,11 @@
 /**
- * trPicker 开发服务器
- * ===================
- * 纯 Node.js 静态文件服务，零外部依赖。
+ * trPicker development server
+ * ===========================
+ * A dependency-free static file server built on plain Node.js.
  *
- * 用法：
- *   node server.js           # 默认端口 8080
- *   node server.js 3000      # 指定端口
+ * Usage:
+ *   node server.js           # default port 8080
+ *   node server.js 3000      # specify a port
  */
 'use strict';
 
@@ -32,7 +32,7 @@ const MIME = {
 };
 
 const server = http.createServer((req, res) => {
-    // 只处理 GET / HEAD
+    // Handle GET / HEAD only
     if (req.method !== 'GET' && req.method !== 'HEAD') {
         res.writeHead(405);
         return res.end();
@@ -40,12 +40,12 @@ const server = http.createServer((req, res) => {
 
     let urlPath = decodeURIComponent(req.url.split('?')[0].split('#')[0]);
 
-    // 默认入口
+    // Default entry
     if (urlPath === '/') urlPath = '/index.html';
 
     const filePath = path.join(ROOT, urlPath);
 
-    // 防止路径穿越
+    // Prevent path traversal
     if (!filePath.startsWith(ROOT)) {
         res.writeHead(403);
         return res.end('Forbidden');
@@ -73,7 +73,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`trPicker 开发服务器已启动:`);
-    console.log(`  本地:   http://localhost:${PORT}/`);
-    console.log(`  退出:   按 Ctrl+C 停止`);
+    console.log(`trPicker dev server started:`);
+    console.log(`  Local:   http://localhost:${PORT}/`);
+    console.log(`  Quit:    press Ctrl+C to stop`);
 });
