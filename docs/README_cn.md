@@ -1,6 +1,6 @@
 # trPicker — 圆形时间范围选择器
 
-**版本：1.0.0**
+**版本：1.1.0**
 
 一个基于 SVG 的圆形时间范围选择器，支持 **24 小时制** / **12 小时制**。通过拖拽手柄即可选择时间范围。
 
@@ -12,23 +12,47 @@
 
 ## 快速上手
 
-### 1. 引入脚本
+### 安装
 
 ```bash
-# npm
 npm install trpicker
 ```
 
-```html
-<!-- CDN（unpkg / jsdelivr） -->
-<script src="https://unpkg.com/trpicker/dist/trpicker.js"></script>
-<!-- 或 -->
-<script src="https://cdn.jsdelivr.net/npm/trpicker/dist/trpicker.js"></script>
+### ES Module
+
+```js
+import trPicker from 'trpicker';
+
+const picker = new trPicker(document.getElementById('picker'), {
+    hourCycle: 24,
+    startMinute: 0,
+    endMinute: 360,          // 06:00
+    stepMinute: 10,
+});
 ```
 
-> trPicker 是一个浏览器组件。通过 `<script>` 加载单文件 bundle（`dist/trpicker.js`）后会暴露全局 `trPicker`。`npm install` 之后，也可通过 `<script src="node_modules/trpicker/dist/trpicker.js">` 在本地引用。
+### CommonJS
+
+```js
+const trPicker = require('trpicker');
+
+const picker = new trPicker(document.getElementById('picker'), {
+    hourCycle: 24,
+});
+```
+
+### 浏览器 `<script>` / CDN
+
+IIFE 产物会暴露全局 `trPicker`：
 
 ```html
+<!-- CDN（unpkg / jsdelivr） -->
+<script src="https://unpkg.com/trpicker/dist/trpicker.iife.js"></script>
+<!-- 或 -->
+<script src="https://cdn.jsdelivr.net/npm/trpicker/dist/trpicker.iife.js"></script>
+<!-- 或本地引用 -->
+<script src="node_modules/trpicker/dist/trpicker.iife.js"></script>
+
 <!-- 2. 容器 -->
 <div id="picker" style="width:320px;height:320px;"></div>
 

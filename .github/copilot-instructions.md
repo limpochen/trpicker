@@ -1,80 +1,96 @@
-# 行为约束
+# Behavioral Constraints
 
-## 1. 编码前先思考
+## 1. Think Before You Code
 
-**不要臆断。不要隐藏困惑。把权衡摆在台面上。**
+**Don't assume. Don't hide confusion. Put trade-offs on the table.**
 
-在实现之前：
+Before implementing:
 
-- 明确陈述你的假设。如果不确定，就提问。
-- 如果存在多种解释，把它们都提出来——不要默默选择其中一个。
-- 如果存在更简单的方法，就直接说出来。在合理的情况下提出反对意见。
-- 如果有不清楚的地方，停下来。指出哪里令人困惑。然后提问。
+- State your assumptions explicitly. If you are unsure, ask.
+- If there are multiple interpretations, raise them all — don't silently pick one.
+- If there is a simpler approach, say so. Push back when reasonable.
+- If something is unclear, stop. Point out what is confusing, then ask.
 
-## 2. 简约至上
+## 2. Minimalism First
 
-**解决问题所需的最少代码。不写任何臆测性的东西。**
+**Write the least code needed to solve the problem. No speculative code.**
 
-- 不实现超出要求的功能。
-- 不为只使用一次的代码创建抽象。
-- 不添加未被要求的“灵活性”或“可配置性”。
-- 不为不可能发生的场景编写错误处理。
-- 如果你写了 200 行代码而它本可以用 50 行实现，就重写它。
+- Don't implement features beyond what was asked for.
+- Don't create abstractions for code used only once.
+- Don't add unrequested "flexibility" or "configurability".
+- Don't write error handling for scenarios that can't happen.
+- If you wrote 200 lines that could have been 50, rewrite it.
 
-问自己：“一位资深工程师会觉得这过于复杂吗？” 如果是，就简化。
+Ask yourself: "Would a senior engineer find this over-engineered?" If so, simplify.
 
-## 3. 手术式变更
+## 3. Surgical Changes
 
-**只改动必须改的地方。只清理自己造成的混乱。**
+**Change only what must change. Clean up only your own mess.**
 
-在编辑已有代码时：
+When editing existing code:
 
-- 不要“改进”相邻的代码、注释或格式。
-- 不要重构那些没有问题的东西。
-- 匹配现有的代码风格，即使你自己会采用不同的写法。
-- 如果你注意到无关的废弃代码，可以提一下——但不要删除它。
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match the existing code style, even if you would write it differently.
+- If you notice unrelated dead code, mention it — but don't delete it.
 
-当你的变更产生了孤儿代码时：
+When your change creates orphaned code:
 
-- 删除那些因**你的改动**而变得未使用的导入/变量/函数。
-- 除非被要求，否则不要删除原本就存在的废弃代码。
+- Remove imports/variables/functions made unused **by your change**.
+- Don't delete pre-existing dead code unless asked.
 
-检验标准：每一行被改动的代码都应该能直接追溯到用户的请求。
+Test: every changed line should trace directly back to the user's request.
 
-## 4. 目标驱动执行
+## 4. Goal-Driven Execution
 
-**定义成功标准。循环验证直到达成。**
+**Define success criteria. Loop until they are met.**
 
-把任务转化为可验证的目标：
+Turn tasks into verifiable goals:
 
-- “添加校验” → “为无效输入编写测试，然后让测试通过”
-- “修复这个 bug” → “编写一个能复现它的测试，然后让测试通过”
-- “重构 X” → “确保重构前后的测试都能通过”
+- "Add validation" → "write tests for invalid input, then make them pass"
+- "Fix this bug" → "write a reproducing test, then make it pass"
+- "Refactor X" → "ensure tests pass before and after"
 
-对于多步骤任务，陈述一个简短的计划：
+For multi-step tasks, state a short plan:
 
 ```
-1. [步骤] → 验证：[检查项]
-2. [步骤] → 验证：[检查项]
-3. [步骤] → 验证：[检查项]
+1. [Step] → Verify: [Check]
+2. [Step] → Verify: [Check]
+3. [Step] → Verify: [Check]
 ```
 
-强有力的成功标准可以让你独立地循环推进。薄弱的标准（“把它弄好”）则需要不断澄清。
+Strong success criteria let you iterate independently. Weak ones ("just make it good") require constant clarification.
 
-# 项目特定的约束和指导原则
+# Project-Specific Constraints & Guidelines
 
-#### 版本更新
+#### Version Bumping
 
-* 每次问题修复以及行级代码调整，版本号增加 0.0.1（如 1.0.0 → 1.0.1）。
-* 每次功能增强及模块级代码调整，版本号增加 0.1.0（如 1.0.0 → 1.1.0），但需要得到授权方能升级。
-* 每次重大变更，主版本号增加 1（如 1.0.0 → 2.0.0），但需要得到授权方能升级。
+* Every bug fix and line-level code adjustment bumps the version by 0.0.1 (e.g. 1.0.0 → 1.0.1).
+* Every feature enhancement and module-level adjustment bumps the version by 0.1.0 (e.g. 1.0.0 → 1.1.0), but requires authorization to bump.
+* Every breaking change bumps the major version by 1 (e.g. 1.0.0 → 2.0.0), but requires authorization to bump.
 
-#### 微调拉杆（速率滚动条）
+#### Fine Slider (Rate Wheel)
 
-* 点击手柄后显示的竖状扁平条。
-* 拖拽速度决定步进速率：快拖 = 快步进，慢拖 = 慢步进。
-* 向上拖 = 增加，向下拖 = 减少。
-* 使用 `APPEARANCE.fineSlider.sensitivity` 控制灵敏度（像素/步）。
-* 滚轮操作保留不变，步进 = stepMinute。
-* `trpicker-fine-slider.js` 负责全部逻辑。
-* 颜色跟随所选手柄色。
+* A slim vertical bar shown after clicking a handle.
+* Drag speed determines the step rate: fast drag = fast stepping, slow drag = slow stepping.
+* Drag up = increase, drag down = decrease.
+* Use `APPEARANCE.fineSlider.sensitivity` to control sensitivity (pixels/step).
+* Wheel behavior is unchanged; each step = stepMinute.
+* `trpicker-fine-slider.js` owns all the logic.
+* Colors follow the selected handle color.
+
+#### Code Comments & Commit Messages
+
+* Write all code comments in English.
+* Write all git commit messages in English.
+* Use a concise, imperative style with Conventional Commits prefixes: `feat:` / `fix:` / `refactor:` / `chore:` / `docs:` (e.g. `feat: add ESM build output`, `fix: correct handle snapping on 12H mode`).
+* Use the initial commit for first-time history: `Initial commit: ...`.
+* Keep comments focused on the "why" of non-obvious logic, not the "what".
+
+#### Documentable Comments (JSDoc)
+
+* Use JSDoc (`/** ... */`) for every public API surface so documentation can be generated: the class, constructor options, public methods, public properties, callbacks, and static members.
+* Document parameters and return values with `@param` / `@returns`; describe option shapes with `@param {Object} options`.
+* Mark deprecated APIs with `@deprecated` and point to the replacement.
+* Keep JSDoc accurate: update it when the code changes, and never copy a doc block that describes something else.
+

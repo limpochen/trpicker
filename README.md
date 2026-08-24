@@ -2,7 +2,7 @@
 
 **English** | [简体中文](docs/README_cn.md)
 
-**Version: 1.0.0**
+**Version: 1.1.0**
 
 An SVG-based circular time-range picker supporting **24-hour** / **12-hour** modes. Select a time range by dragging the handles.
 
@@ -14,23 +14,47 @@ An SVG-based circular time-range picker supporting **24-hour** / **12-hour** mod
 
 ## Quick start
 
-### 1. Include the script
+### Install
 
 ```bash
-# npm
 npm install trpicker
 ```
 
-```html
-<!-- CDN (unpkg / jsdelivr) -->
-<script src="https://unpkg.com/trpicker/dist/trpicker.js"></script>
-<!-- or -->
-<script src="https://cdn.jsdelivr.net/npm/trpicker/dist/trpicker.js"></script>
+### ES Module
+
+```js
+import trPicker from 'trpicker';
+
+const picker = new trPicker(document.getElementById('picker'), {
+    hourCycle: 24,
+    startMinute: 0,
+    endMinute: 360,          // 06:00
+    stepMinute: 10,
+});
 ```
 
-> trPicker is a browser component. The single-file bundle (`dist/trpicker.js`) exposes the global `trPicker` when loaded via `<script>`. After `npm install`, you can also reference it locally with `<script src="node_modules/trpicker/dist/trpicker.js">`.
+### CommonJS
+
+```js
+const trPicker = require('trpicker');
+
+const picker = new trPicker(document.getElementById('picker'), {
+    hourCycle: 24,
+});
+```
+
+### Browser `<script>` / CDN
+
+The IIFE bundle exposes the global `trPicker`:
 
 ```html
+<!-- CDN (unpkg / jsdelivr) -->
+<script src="https://unpkg.com/trpicker/dist/trpicker.iife.js"></script>
+<!-- or -->
+<script src="https://cdn.jsdelivr.net/npm/trpicker/dist/trpicker.iife.js"></script>
+<!-- or locally -->
+<script src="node_modules/trpicker/dist/trpicker.iife.js"></script>
+
 <!-- 2. Container -->
 <div id="picker" style="width:320px;height:320px;"></div>
 
