@@ -9,7 +9,7 @@ on:
 
 permissions:
   id-token: write  # Required for OIDC (Trusted Publishing)
-  contents: read
+  contents: write  # Required for creating the GitHub Release
 
 jobs:
   publish:
