@@ -1,0 +1,49 @@
+name: Publish Package to npm
+
+# Publishes to the npm registry via Trusted Publishing (OIDC) when a
+# version tag (e.g. v1.0.0) is pushed. No npm token is stored anywhere.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write  # Required for OIDC (Trusted Publishing)
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build bundle
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          NOTES_FILE="${RUNNER_TEMP}/release-notes.md"
+          # Extract the current version's section from docs/Changelog.md so the
+          # release notes stay user-facing and consistent with the changelog.
+          awk -v v="$VERSION" '
+            /^## \[/ { if (found) exit; if ($0 ~ "^## \\[" v "\\]") found = 1; next }
+            found { print }
+          ' docs/Changelog.md > "$NOTES_FILE"
+          if [ ! -s "$NOTES_FILE" ]; then
+            echo "# trPicker $GITHUB_REF_NAME" > "$NOTES_FILE"
+          fi
+          gh release create "$GITHUB_REF_NAME" --title "trPicker $GITHUB_REF_NAME" --notes-file "$NOTES_FILE"

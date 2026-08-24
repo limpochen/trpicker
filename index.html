@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title">Time Range Picker - Demo</title>
+<link rel="stylesheet" href="css/demo.css">
+</head>
+<body>
+
+<header class="demo-header">
+    <div class="demo-header-inner">
+        <span class="demo-title" data-i18n="brandName">trPicker</span>
+        <span class="demo-version" id="demoVersion"></span>
+        <span class="demo-desc" data-i18n="brandDesc">Circular time range picker</span>
+        <span class="demo-badge" data-i18n="hourBadge">24H / 12H</span>
+    </div>
+</header>
+
+<div class="demo-wrap">
+
+    <!-- ========== Trigger (popup mode: click to open the picker) ========== -->
+    <span class="trigger-label" data-i18n="triggerLabel">⏱ Click to select a time range</span>
+    <div class="trigger-wrap">
+        <input type="text" class="trigger-input" id="triggerInput"
+               readonly placeholder="00:00 - 00:00">
+        <button type="button" class="trigger-btn" id="triggerBtn"
+                data-i18n-title="triggerBtnHint" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- ========== Bottom panel ========== -->
+    <div class="demo-bottom">
+
+        <!-- Top row -->
+        <div class="demo-row">
+            <!-- Left: settings -->
+            <div class="demo-params">
+                <h3 data-i18n="settings">⚙ Settings</h3>
+                <div class="param-row">
+                    <label data-i18n="hourCycle">Hour cycle:</label>
+                    <div class="param-radio-group" id="hourModeGroup">
+                        <label data-i18n="hour24"><input type="radio" name="hourMode" value="24h" checked>24-hour</label>
+                        <label data-i18n="hour12"><input type="radio" name="hourMode" value="12h">12-hour</label>
+                    </div>
+                </div>
+                <div class="param-row">
+                    <label data-i18n="allowSwitch">Allow switching:</label>
+                    <input type="checkbox" id="enableSwitchChk" checked>
+                    <label for="enableSwitchChk" data-i18n="switch12_24" style="font-size:13px;color:#6b7280">12/24H button</label>
+                </div>
+                <div class="param-row">
+                    <label data-i18n="popupAnimation">Popup animation:</label>
+                    <select id="popupAnimSelect">
+                        <option value="fade" selected data-i18n="animFade">Fade</option>
+                        <option value="drop" data-i18n="animDrop">Drop down</option>
+                        <option value="instant" data-i18n="animInstant">Instant</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <label data-i18n="detailLevel">Detail level:</label>
+                    <div class="param-radio-group" id="detailLevelGroup">
+                        <label data-i18n="detailSimple"><input type="radio" name="detailLevel" value="simple" checked>Simple</label>
+                        <label data-i18n="detailDetailed"><input type="radio" name="detailLevel" value="detailed">Detailed</label>
+                    </div>
+                </div>
+                <div class="param-row">
+                    <label for="dialStyleSelect" data-i18n="dialStyle">Dial style:</label>
+                    <select id="dialStyleSelect">
+                        <option value="solid" data-i18n="dialSolid">Solid</option>
+                        <option value="metal" selected data-i18n="dialMetal">Metal</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <label for="enableDetailAdjustChk" data-i18n="allowDetailAdjust">Allow detail adjustment:</label>
+                    <input type="checkbox" id="enableDetailAdjustChk" checked>
+                </div>
+                <div class="param-row">
+                    <label for="stepSelect" data-i18n="minStep">Min step:</label>
+                    <select id="stepSelect">
+                        <option value="1" data-i18n="stepMin" data-i18n-args="1">1 min</option>
+                        <option value="5" data-i18n="stepMin" data-i18n-args="5">5 min</option>
+                        <option value="10" selected data-i18n="stepMin" data-i18n-args="10">10 min</option>
+                        <option value="15" data-i18n="stepMin" data-i18n-args="15">15 min</option>
+                        <option value="30" data-i18n="stepMin" data-i18n-args="30">30 min</option>
+                        <option value="60" data-i18n="stepMin" data-i18n-args="60">60 min</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <label for="enableStepAdjustChk" data-i18n="allowStepAdjust">Allow step adjustment:</label>
+                    <input type="checkbox" id="enableStepAdjustChk" checked>
+                </div>
+                <div class="param-row">
+                    <label for="startColor" data-i18n="startColor">Start color:</label>
+                    <input type="color" id="startColor" value="#4f46e5">
+                </div>
+                <div class="param-row">
+                    <label for="endColor" data-i18n="endColor">End color:</label>
+                    <input type="color" id="endColor" value="#ef4444">
+                </div>
+                <div class="param-row">
+                    <label for="gradientChk" data-i18n="gradient">Gradient:</label>
+                    <input type="checkbox" id="gradientChk">
+                </div>
+                <div class="param-row" id="lineColorRow">
+                    <label for="lineColor" data-i18n="lineColor">Line color:</label>
+                    <input type="color" id="lineColor" value="#28a050">
+                </div>
+                <div class="param-row">
+                    <label for="popupBorderRadius" data-i18n="popupRadius">Popup radius:</label>
+                    <input type="range" id="popupBorderRadius" min="0" max="40" value="16" style="flex:1;height:6px;accent-color:#4f46e5">
+                    <span id="popupRadiusVal" style="font-size:14px;color:#374151;min-width:32px;text-align:right">16px</span>
+                </div>
+            </div>
+
+            <!-- Right: call code -->
+            <div class="demo-call">
+                <h3 data-i18n="callCode">📞 Call code</h3>
+                <textarea id="callCodeBlock" spellcheck="false" readonly></textarea>
+            </div>
+        </div>
+
+        <!-- Bottom row -->
+        <div class="demo-row">
+            <!-- Left: returned data -->
+            <div class="demo-output">
+                <h3 data-i18n="returnedData">📤 Returned data (onChange)</h3>
+                <textarea id="outputBlock" spellcheck="false" readonly></textarea>
+            </div>
+
+            <!-- Right: options text -->
+            <div class="demo-code">
+                <h3 data-i18n="optionsText">📋 Options text</h3>
+                <textarea id="codeBlock" spellcheck="false" readonly></textarea>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="src/trpicker.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/demo.js"></script>
+
+</body>
+</html>

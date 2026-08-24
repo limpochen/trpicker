@@ -1,0 +1,38 @@
+# 依赖
+node_modules/
+
+# Python 虚拟环境
+.venv/
+
+# 构建输出
+dist/
+build/
+
+# 日志
+*.log
+npm-debug.log*
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE - 个人设置（项目共享配置如 launch.json 保留）
+.vscode/settings.json
+.vscode/*.code-snippets
+
+# 本地配置文件
+*.local
+
+# 环境变量
+.env
+.env.local
+
+# 测试覆盖率
+coverage/
+
+# 临时文件
+tmp/
+temp/
