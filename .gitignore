@@ -19,9 +19,8 @@ Thumbs.db
 *.swo
 *~
 
-# IDE - 个人设置（项目共享配置如 launch.json 保留）
-.vscode/settings.json
-.vscode/*.code-snippets
+# IDE - 个人设置
+.vscode/
 
 # 本地配置文件
 *.local
