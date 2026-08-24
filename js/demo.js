@@ -1,3 +1,5 @@
+import trPicker from '../src/index.js';
+
 /* ===== Read current values from the settings panel DOM ===== */
 function readParamsFromPanel() {
     currentHourMode = document.querySelector('#hourModeGroup input:checked').value;

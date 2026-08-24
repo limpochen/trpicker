@@ -2,15 +2,10 @@
  * trPicker — Appearance configuration module
  * ===========================================
  * All dial visual parameters are centralized here for easy overall tuning.
- * Loaded as a standalone file; must be loaded after trpicker.js.
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-config.js: trPicker is not defined. Make sure trpicker.js is loaded first.');
-    }
+import trPicker from './trpicker.js';
 
-    trPicker.APPEARANCE = {
+trPicker.APPEARANCE = {
         // ---- Dial geometry ----
         centerX: 160,                     // Center X (viewBox 320×320)
         centerY: 160,                     // Center Y
@@ -210,4 +205,3 @@
         },
 
     };
-})();

@@ -4,15 +4,10 @@
  * Pointer events, touch events, wheel events.
  * 12H mode: continuous two-ring rotation + free span crossing (no constraints).
  * 24H mode: original span-crossing constraints preserved.
- * Depends on: trpicker.js, trpicker-config.js, trpicker-utils.js, trpicker-view.js
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-events.js: trPicker is not defined.');
-    }
+import trPicker from './trpicker.js';
 
-    const P = trPicker.prototype;
+const P = trPicker.prototype;
 
     // ==================== Event binding ====================
 
@@ -247,4 +242,3 @@
             this._pinchState = null;
         }
     };
-})();

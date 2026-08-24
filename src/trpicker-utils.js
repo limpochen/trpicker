@@ -2,15 +2,10 @@
  * trPicker — Utility functions module
  * ====================================
  * Pure functions such as angle/hour conversion and coordinate math.
- * Depends on: trpicker.js, trpicker-config.js
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-utils.js: trPicker is not defined.');
-    }
+import trPicker from './trpicker.js';
 
-    const P = trPicker.prototype;
+const P = trPicker.prototype;
 
     // ==================== Angle / hour conversion ====================
 
@@ -97,4 +92,3 @@
         newHour = ((newHour % 24) + 24) % 24;
         return newHour;
     };
-})();

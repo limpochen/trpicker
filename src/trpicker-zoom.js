@@ -4,19 +4,14 @@
  * Centralizes zooming and panning of the SVG viewBox.
  * A pure geometry engine: only considers coordinates and dimensions, unaware of dial elements.
  * Drives smooth transitions via rAF.
- * Depends on: trpicker.js, trpicker-config.js
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-zoom.js: trPicker is not defined.');
-    }
+import trPicker from './trpicker.js';
 
-    const P = trPicker.prototype;
-    const VB = trPicker.APPEARANCE.viewBox;
-    const ZOOM = trPicker.APPEARANCE.zoom;
-    const CX = trPicker.APPEARANCE.centerX;
-    const CY = trPicker.APPEARANCE.centerY;
+const P = trPicker.prototype;
+const VB = trPicker.APPEARANCE.viewBox;
+const ZOOM = trPicker.APPEARANCE.zoom;
+const CX = trPicker.APPEARANCE.centerX;
+const CY = trPicker.APPEARANCE.centerY;
 
     /**
      * Initialize the viewport state.
@@ -276,4 +271,3 @@
         const maxC = VB.fullSize - halfSize + margin;
         return Math.max(minC, Math.min(maxC, v));
     };
-})();

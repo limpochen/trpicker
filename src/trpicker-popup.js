@@ -2,15 +2,10 @@
  * trPicker — Popup mode module
  * =============================
  * Opening/closing/positioning of the popup panel and trigger updates.
- * Depends on: trpicker.js, trpicker-svg.js, trpicker-events.js
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-popup.js: trPicker is not defined.');
-    }
+import trPicker from './trpicker.js';
 
-    const P = trPicker.prototype;
+const P = trPicker.prototype;
 
     /** Initialize popup mode */
     P._initPopupMode = function() {
@@ -42,7 +37,10 @@
         // Cursor styling is controlled by the consumer's CSS; the component does not intrude
     };
 
-    /** Open the popup panel */
+    /**
+     * Open the popup panel.
+     * @returns {void}
+     */
     P.open = function() {
         if (this._popupVisible) return;
         this._popupVisible = true;
@@ -87,13 +85,19 @@
         this.onChange(this.startMinute, this.endMinute);
     };
 
-    /** Close the popup panel */
+    /**
+     * Close the popup panel and release its resources.
+     * @returns {void}
+     */
     P.close = function() {
         if (!this._popupVisible) return;
         this.destroy();
     };
 
-    /** Toggle the popup panel */
+    /**
+     * Toggle the popup panel open/closed.
+     * @returns {void}
+     */
     P.toggle = function() {
         if (this._popupVisible) {
             this.close();
@@ -135,4 +139,4 @@
         this._popupPanel.style.left = Math.round(left) + 'px';
     };
 
-})();
+

@@ -1,6 +1,6 @@
 {
     "name": "trpicker",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "基于 SVG 的圆形时间范围选择器，支持 24/12 小时制",
     "license": "MIT",
     "author": "Limpo",
@@ -16,13 +16,27 @@
         "picker"
     ],
     "main": "./dist/trpicker.js",
-    "unpkg": "./dist/trpicker.js",
-    "jsdelivr": "./dist/trpicker.js",
+    "module": "./dist/trpicker.mjs",
+    "types": "./dist/trpicker.d.ts",
+    "unpkg": "./dist/trpicker.iife.js",
+    "jsdelivr": "./dist/trpicker.iife.js",
+    "exports": {
+        ".": {
+            "types": "./dist/trpicker.d.ts",
+            "import": "./dist/trpicker.mjs",
+            "require": "./dist/trpicker.js",
+            "default": "./dist/trpicker.mjs"
+        },
+        "./package.json": "./package.json"
+    },
     "files": [
         "dist"
     ],
     "scripts": {
         "build": "node build.js",
         "start": "node server.js"
+    },
+    "devDependencies": {
+        "esbuild": "^0.19.12"
     }
 }

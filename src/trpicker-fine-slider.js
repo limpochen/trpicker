@@ -6,15 +6,10 @@
  * Drag up = increase, drag down = decrease.
  * Wheel operation is preserved; each step = stepMinute.
  * Colors follow the selected handle color.
- * Depends on: trpicker.js
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-fine-slider.js: trPicker is not defined.');
-    }
+import trPicker from './trpicker.js';
 
-    const P = trPicker.prototype;
+const P = trPicker.prototype;
 
     // ==================== DOM creation ====================
 
@@ -406,4 +401,3 @@
         const newL = l + lightUp - (lightUp + darkDown) * Math.pow(dist, exp);
         return this._HSLToHex(h, s, Math.max(0, Math.min(100, newL)));
     };
-})();

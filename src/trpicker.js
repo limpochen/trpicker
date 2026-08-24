@@ -1,7 +1,7 @@
 /**
  * trPicker — Circular Time Range Picker (Entry)
  * =============================================
- * @version 1.0.0
+ * @version 1.1.0
  *
  * Class skeleton + constructor + public API.
  *
@@ -24,7 +24,7 @@
  * 24H: bottom=0 | left=6 | top=12 | right=18
  * 12H: bottom=6/18 | left=9/21 | top=12/0 | right=3/15
  */
-class trPicker {
+export default class trPicker {
 
     /**
      * @param {HTMLElement} container  - Container element that hosts the SVG
@@ -184,19 +184,9 @@ class trPicker {
         this._resizeHandler   = null;
         this._triggerClickHandler = null;
 
-        // ---- Dependency readiness check ----
-        if (typeof trPicker.APPEARANCE !== 'undefined') {
-            this._initAppearance();
-            this._init();
-        } else if (trPicker._deferred) {
-            // Auto-loading in progress; defer initialization
-            trPicker._deferred.push(this);
-        } else {
-            throw new Error(
-                'trPicker: dependency modules are not loaded. Make sure helper files such as trpicker-config.js are loaded, ' +
-                'or include only trpicker.js (it auto-loads the rest).'
-            );
-        }
+        // ---- Initialize (all dependency modules are guaranteed loaded via ESM imports) ----
+        this._initAppearance();
+        this._init();
     }
 
     // ==================== Initialization ====================
@@ -247,7 +237,11 @@ class trPicker {
 
     // ==================== Public API ====================
 
-    /** Set the snap step */
+    /**
+     * Change the snap step and re-snap the current range to it.
+     * @param {number} minute - New snap step in minutes (1-1439)
+     * @returns {void}
+     */
     setStep(minute) {
         if (minute <= 0 || minute >= 1440) return;
         this.stepMinute = minute;
@@ -262,17 +256,29 @@ class trPicker {
         this.onChange(this.startMinute, this.endMinute);
     }
 
+    /** Set the start handle color */
     setStartColor(color) { this.startColor = color; this._update(); }
+    /** Set the end handle color */
     setEndColor(color)   { this.endColor   = color; this._update(); }
+    /** Set the arc color; 'gradient' for a gradient */
     setLineColor(color)  { this.lineColor  = color; this._update(); }
 
-    /** Set the dial detail level */
+    /**
+     * Switch the dial material style.
+     * @param {'solid'|'metal'} style - Dial style
+     * @returns {void}
+     */
     setDialStyle(style) {
         this.dialStyle = style;
         if (!this._svg) return;
         this._rebuildContent();
     }
 
+    /**
+     * Switch the dial tick detail level.
+     * @param {'simple'|'detailed'} level - Tick detail level
+     * @returns {void}
+     */
     setDetailLevel(level) {
         if (level !== 'simple' && level !== 'detailed') return;
         if (level === this.detailLevel) return;
@@ -379,6 +385,11 @@ class trPicker {
         return this.setHourCycle(cycle);
     }
 
+    /**
+     * Switch the hour cycle.
+     * @param {12|24} cycle - Hour cycle
+     * @returns {trPicker} This instance (chainable)
+     */
     setHourCycle(cycle) {
         if (cycle !== 12 && cycle !== 24) return this;
         if (cycle === this.hourCycle) return this;
@@ -548,7 +559,7 @@ trPicker.registerMode = function(mode, cls) {
 };
 
 /** Current version */
-trPicker.VERSION = '1.0.0';
+trPicker.VERSION = '1.1.0';
 
 // ==================== 自包含样式注入（组件不再依赖外部 CSS 文件） ====================
 // 首次加载时把组件样式注入 <head>（以 id 防重复），确保实例化前样式就绪。
@@ -744,93 +755,4 @@ trPicker.VERSION = '1.0.0';
    ============================================================ */
 `;
     document.head.appendChild(style);
-})();
-
-// ==================== Auto-loading dependency modules ====================
-// When trpicker.js is included alone, auto-load the other 8 helper files.
-// Scripts already manually included in the page are not loaded again.
-
-(function() {
-    'use strict';
-
-    // Dependencies live in the same directory as trpicker.js
-    const LIB_DIR = '';
-
-    const DEPS = [
-        LIB_DIR + 'trpicker-config.js',
-        LIB_DIR + 'trpicker-utils.js',
-        LIB_DIR + 'trpicker-svg.js',
-        LIB_DIR + 'trpicker-zoom.js',
-        LIB_DIR + 'trpicker-view.js',
-        LIB_DIR + 'trpicker-events.js',
-        LIB_DIR + 'trpicker-popup.js',
-        LIB_DIR + 'trpicker-fine-slider.js',
-    ];
-
-    // Check whether all dependencies are loaded (by looking for matching <script> tags in the page)
-    const allLoaded = DEPS.every(function(file) {
-        return document.querySelector('script[src$="' + file + '"]') !== null;
-    });
-    if (allLoaded) return;
-
-    // Initialize the deferred queue
-    trPicker._deferred = [];
-
-    // Get the directory containing trpicker.js
-    let basePath = '';
-    const currentScript = document.currentScript;
-    if (currentScript) {
-        const src = currentScript.src;
-        basePath = src.substring(0, src.lastIndexOf('/') + 1);
-    }
-
-    /**
-     * Dynamically load all dependency scripts.
-     * After all are loaded, process the deferred instances.
-     */
-    function loadDeps() {
-        let remaining = DEPS.length;
-
-        function onLoad() {
-            remaining--;
-            if (remaining === 0) {
-                // All dependencies ready; process the deferred queue
-                const queue = trPicker._deferred;
-                trPicker._deferred = null;
-                queue.forEach(function(inst) {
-                    inst._initAppearance();
-                    inst._init();
-                });
-            }
-        }
-
-        DEPS.forEach(function(file) {
-            const s = document.createElement('script');
-            s.src = basePath + file;
-            s.onload = onLoad;
-            s.onerror = function() {
-                console.error('trPicker: failed to load dependency ' + file);
-            };
-            document.head.appendChild(s);
-        });
-    }
-
-    // Prefer document.write (synchronous, blocking; available during page parsing)
-    if (document.readyState === 'loading') {
-        try {
-            DEPS.forEach(function(file) {
-                document.write(
-                    '<script src="' + basePath + file + '"><\/script>'
-                );
-            });
-            // After document.write executes synchronously, all dependencies are ready
-            trPicker._deferred = null;
-            return;
-        } catch (e) {
-            // Fall back to dynamic loading when document.write is unavailable
-        }
-    }
-
-    // Use dynamic loading after page parsing completes
-    loadDeps();
 })();

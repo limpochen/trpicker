@@ -3,15 +3,10 @@
  * =======================================================
  * Responsible for SVG element creation, clock-face construction, handle construction,
  * and data-driven drawing of 12h/24h mode ticks and numbers.
- * Depends on: trpicker.js, trpicker-config.js
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-svg.js: trPicker is not defined.');
-    }
+import trPicker from './trpicker.js';
 
-    const P = trPicker.prototype;
+const P = trPicker.prototype;
 
     // ==================== SVG factory ====================
 
@@ -668,10 +663,7 @@
         this._detailBtnD.addEventListener('pointerdown', this._detailBtnDH);
     };
 
-    // ==================== Subclasses (globally exposed for factory routing + type-check) ====================
-})();
-
-// Subclasses must be defined outside the IIFE to become globals (for third-party new trPicker24h() usage)
+// ==================== Mode subclasses (factory routing) ====================
 class trPicker24h extends trPicker {
     constructor(c, o = {}) { o.hourCycle = 24; super(c, o); }
 }

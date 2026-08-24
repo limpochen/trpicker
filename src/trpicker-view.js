@@ -2,15 +2,10 @@
  * trPicker — View update module
  * ==============================
  * Handles arc rendering, handle updates, AM/PM labels, and smooth viewBox zoom.
- * Depends on: trpicker.js, trpicker-config.js, trpicker-utils.js, trpicker-svg.js
  */
-(function() {
-    'use strict';
-    if (typeof trPicker === 'undefined') {
-        throw new Error('trpicker-view.js: trPicker is not defined.');
-    }
+import trPicker from './trpicker.js';
 
-    const P = trPicker.prototype;
+const P = trPicker.prototype;
 
     // ==================== Main update ====================
 
@@ -384,4 +379,3 @@
         // Delegate the smooth transition to the zoom module
         this.zoom.frame(arcCX, arcCY, size / 2);
     };
-})();

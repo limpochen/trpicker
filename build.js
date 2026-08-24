@@ -1,93 +1,93 @@
 /**
  * trPicker build script
  * =====================
- * Merges all JS files into a single file (stripping the entry's auto-load logic).
+ * Bundles the ESM source into three distributable formats with esbuild:
+ *   - trpicker.mjs       ES Module (modern bundlers / `import`)
+ *   - trpicker.js        CommonJS (legacy tooling / `require`)
+ *   - trpicker.iife.js   IIFE (`<script>` / CDN), global `trPicker`
+ * plus the TypeScript declarations.
  *
  * Usage: node build.js
  */
 'use strict';
 
-const fs   = require('fs');
 const path = require('path');
+const fs = require('fs');
+const esbuild = require('esbuild');
 
-const SRC = path.resolve(__dirname, 'src');
-const DST = path.resolve(__dirname, 'dist');
-
-// ==================== JS merge order ====================
-const LIB_ORDER = [
-    'trpicker-config.js',
-    'trpicker-utils.js',
-    'trpicker-svg.js',
-    'trpicker-zoom.js',
-    'trpicker-view.js',
-    'trpicker-events.js',
-    'trpicker-popup.js',
-    'trpicker-fine-slider.js',
-];
-
-// Auto-load marker — everything from this line onwards is stripped
-const AUTO_LOAD_MARKER = '// ==================== Auto-loading dependency modules ====================';
+const root = __dirname;
+const outdir = path.join(root, 'dist');
+const jsEntry = path.join(root, 'src', 'index.js');
+const dtsSource = path.join(root, 'src', 'trpicker.d.ts');
+const pkg = require(path.join(root, 'package.json'));
 
 /**
- * Read the entry file and strip the auto-load section.
+ * Shared esbuild options for every output format.
+ * - target: es2020 keeps optional chaining / nullish coalescing but drops newer
+ *   syntax for wider browser support.
+ * - minify: production bundle.
  */
-function readEntry() {
-    const content = fs.readFileSync(path.join(SRC, 'trpicker.js'), 'utf8');
-    const idx = content.indexOf(AUTO_LOAD_MARKER);
-    if (idx === -1) {
-        console.error('Warning: auto-load marker not found; keeping the full file');
-        return content;
-    }
-    return content.substring(0, idx).replace(/\n{3,}$/, '\n');
-}
+const COMMON = {
+  entryPoints: [jsEntry],
+  bundle: true,
+  platform: 'browser',
+  target: ['es2020'],
+  minify: true,
+  sourcemap: false,
+  legalComments: 'none',
+};
 
 /**
- * Read the dependency modules (kept as-is; IIFE-wrapped code merges without conflicts).
+ * IIFE convenience footer: esbuild's globalName is the module namespace, so the
+ * default export lives at `trPicker.default`. This re-exposes it directly as
+ * `window.trPicker` so `<script>` users can write `new trPicker(...)`.
  */
-function readLibs() {
-    const chunks = [];
-    LIB_ORDER.forEach((file) => {
-        const filePath = path.join(SRC, file);
-        if (!fs.existsSync(filePath)) {
-            console.error('Error: dependency file not found ' + filePath);
-            process.exit(1);
-        }
-        const content = fs.readFileSync(filePath, 'utf8');
-        chunks.push(content);
-    });
-    return chunks.join('\n\n');
-}
+const IIFE_FOOTER = 'if (typeof window !== "undefined" && window.trPicker && window.trPicker.default) window.trPicker = window.trPicker.default;';
 
 /**
- * Ensure a directory exists.
+ * CommonJS convenience footer: esbuild wraps the default export as
+ * `module.exports.default`. Unwrap it so `const trPicker = require('trpicker')`
+ * yields the class directly.
  */
-function ensureDir(dirPath) {
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-    }
+const CJS_FOOTER = 'if (module.exports && module.exports.default) module.exports = module.exports.default;';
+
+async function build() {
+  // Start from a clean output directory so stale artifacts never leak through.
+  fs.rmSync(outdir, { recursive: true, force: true });
+  fs.mkdirSync(outdir, { recursive: true });
+
+  // ESM bundle (modern bundlers / `import`).
+  await esbuild.build({ ...COMMON, format: 'esm', outfile: path.join(outdir, 'trpicker.mjs') });
+
+  // CommonJS bundle (legacy tooling / `require`).
+  await esbuild.build({
+    ...COMMON,
+    format: 'cjs',
+    outfile: path.join(outdir, 'trpicker.js'),
+    footer: { js: CJS_FOOTER },
+  });
+
+  // IIFE bundle (direct `<script>` / CDN usage), global `trPicker`.
+  await esbuild.build({
+    ...COMMON,
+    format: 'iife',
+    outfile: path.join(outdir, 'trpicker.iife.js'),
+    globalName: 'trPicker',
+    footer: { js: IIFE_FOOTER },
+  });
+
+  // Copy the TypeScript declarations alongside the bundles.
+  fs.copyFileSync(dtsSource, path.join(outdir, 'trpicker.d.ts'));
+
+  const files = ['trpicker.mjs', 'trpicker.js', 'trpicker.iife.js', 'trpicker.d.ts'];
+  const sizes = files
+    .map((f) => `  ${f}  ${(fs.statSync(path.join(outdir, f)).size / 1024).toFixed(1)} KiB`)
+    .join('\n');
+  console.log(`build v${pkg.version} OK\n${sizes}`);
 }
 
-// ==================== Build ====================
-console.log('Building trPicker ...');
+build().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
 
-// Clean dist
-if (fs.existsSync(DST)) {
-    fs.rmSync(DST, { recursive: true });
-}
-
-// 1. Merge JS
-const entry = readEntry();
-const libs  = readLibs();
-const combined = entry + '\n\n' + libs;
-
-ensureDir(DST);
-fs.writeFileSync(path.join(DST, 'trpicker.js'), combined, 'utf8');
-console.log('  ✓ dist/trpicker.js (' + (1 + LIB_ORDER.length) + ' files merged)');
-
-// 2. Summary
-const stats = fs.statSync(path.join(DST, 'trpicker.js'));
-console.log('');
-console.log('Build complete!');
-console.log('  dist/trpicker.js  — ' + (stats.size / 1024).toFixed(1) + ' KB');
-console.log('');
-console.log('Usage: <script src="dist/trpicker.js"></script> or via CDN');
