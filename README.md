@@ -6,7 +6,10 @@
 
 An SVG-based circular time-range picker supporting **24-hour** / **12-hour** modes. Select a time range by dragging the handles.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-2ea44f)](https://limpochen.github.io/trpicker/) [![npm version](https://img.shields.io/npm/v/trpicker)](https://www.npmjs.com/package/trpicker) [![npm downloads](https://img.shields.io/npm/dm/trpicker)](https://www.npmjs.com/package/trpicker) [![License: MIT](https://img.shields.io/npm/l/trpicker)](https://github.com/limpochen/trpicker/blob/main/LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-2ea44f)](https://limpochen.github.io/trpicker/)
+[![npm version](https://img.shields.io/npm/v/trpicker)](https://www.npmjs.com/package/trpicker)
+[![npm downloads](https://img.shields.io/npm/dm/trpicker)](https://www.npmjs.com/package/trpicker)
+[![License: MIT](https://img.shields.io/npm/l/trpicker)](https://github.com/limpochen/trpicker/blob/main/LICENSE)
 
 ![Picker popup](docs/screenshots/picker.png)
 
